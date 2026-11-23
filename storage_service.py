@@ -31,7 +31,7 @@ class StorageService:
             from botocore.config import Config as BotoConfig
             
             region = Config.AWS_REGION or "ap-southeast-2"
-            session_kwargs = {"region_name": region}
+            session_kwargs = {}
             if Config.AWS_ACCESS_KEY_ID and Config.AWS_SECRET_ACCESS_KEY:
                 session_kwargs["aws_access_key_id"] = Config.AWS_ACCESS_KEY_ID
                 session_kwargs["aws_secret_access_key"] = Config.AWS_SECRET_ACCESS_KEY
