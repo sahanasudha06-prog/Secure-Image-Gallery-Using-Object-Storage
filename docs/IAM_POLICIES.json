@@ -1,0 +1,120 @@
+{
+  "project": "Secure Image Gallery using Object Storage",
+  "project_owner": "Sahana",
+  "security_specifications": {
+    "iam_group": "ImageAdmins",
+    "iam_user": "sahana_admin",
+    "iam_role_ec2": "EC2-S3-ImageGallery-Role",
+    "s3_bucket": "sahana-secure-image-gallery",
+    "principle": "Principle of Least Privilege"
+  },
+  "policies": {
+    "1_ImageAdmins_Group_Policy": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "AllowFullS3ImageManagement",
+          "Effect": "Allow",
+          "Action": [
+            "s3:CreateBucket",
+            "s3:ListAllMyBuckets",
+            "s3:GetBucketLocation",
+            "s3:GetBucketVersioning",
+            "s3:PutBucketVersioning",
+            "s3:GetBucketPolicy",
+            "s3:PutBucketPolicy",
+            "s3:GetBucketAcl",
+            "s3:PutBucketPublicAccessBlock"
+          ],
+          "Resource": "arn:aws:s3:::*"
+        },
+        {
+          "Sid": "AllowObjectAdministration",
+          "Effect": "Allow",
+          "Action": [
+            "s3:ListBucket",
+            "s3:ListBucketVersions",
+            "s3:GetObject",
+            "s3:GetObjectVersion",
+            "s3:PutObject",
+            "s3:DeleteObject",
+            "s3:DeleteObjectVersion"
+          ],
+          "Resource": [
+            "arn:aws:s3:::sahana-secure-image-gallery",
+            "arn:aws:s3:::sahana-secure-image-gallery/*"
+          ]
+        }
+      ]
+    },
+    "2_EC2_Role_Trust_Relationship": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "AllowEC2ServiceToAssumeRole",
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "ec2.amazonaws.com"
+          },
+          "Action": "sts:AssumeRole"
+        }
+      ]
+    },
+    "3_EC2_S3_Least_Privilege_Permissions_Policy": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "AllowBucketListing",
+          "Effect": "Allow",
+          "Action": [
+            "s3:ListBucket",
+            "s3:GetBucketLocation",
+            "s3:ListBucketVersions"
+          ],
+          "Resource": "arn:aws:s3:::sahana-secure-image-gallery"
+        },
+        {
+          "Sid": "AllowReadWriteDeleteObjects",
+          "Effect": "Allow",
+          "Action": [
+            "s3:GetObject",
+            "s3:GetObjectVersion",
+            "s3:PutObject",
+            "s3:DeleteObject",
+            "s3:DeleteObjectVersion"
+          ],
+          "Resource": "arn:aws:s3:::sahana-secure-image-gallery/*"
+        }
+      ]
+    },
+    "4_S3_Bucket_Policy_Enforcing_SSL_And_Private_Access": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "DenyInsecureHTTPTransport",
+          "Effect": "Deny",
+          "Principal": "*",
+          "Action": "s3:*",
+          "Resource": [
+            "arn:aws:s3:::sahana-secure-image-gallery",
+            "arn:aws:s3:::sahana-secure-image-gallery/*"
+          ],
+          "Condition": {
+            "Bool": {
+              "aws:SecureTransport": "false"
+            }
+          }
+        }
+      ]
+    },
+    "5_S3_Public_Access_Block_Configuration": {
+      "BlockPublicAcls": true,
+      "IgnorePublicAcls": true,
+      "BlockPublicPolicy": true,
+      "RestrictPublicBuckets": true
+    },
+    "6_S3_Bucket_Versioning_Configuration": {
+      "Status": "Enabled"
+    }
+  }
+}

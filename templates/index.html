@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Image Gallery — Sahana</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Brand & Project Owner -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-md shadow-indigo-600/20">
+          <i data-lucide="shield-check" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold tracking-tight text-white flex items-center gap-2">
+            <span>Secure Image Gallery</span>
+          </h1>
+          <p class="text-xs text-indigo-400 font-medium">Sahana • AWS EC2 &amp; S3 Object Storage</p>
+        </div>
+      </div>
+
+      <!-- Center / Right: IAM Identity Role Switcher & Upload Action -->
+      <div class="flex items-center gap-3">
+        <!-- IAM Least Privilege Role Switcher -->
+        <div class="hidden sm:flex items-center bg-slate-950 border border-slate-800 rounded-xl p-1 text-xs">
+          <span class="text-slate-400 px-2 font-medium flex items-center gap-1.5">
+            <i data-lucide="user-check" class="w-3.5 h-3.5 text-indigo-400"></i>
+            <span class="hidden md:inline">IAM Role:</span>
+          </span>
+          <button id="role-admin-btn" onclick="setRole('ImageAdmins')" class="px-2.5 py-1 rounded-lg font-medium transition bg-indigo-600 text-white shadow-sm flex items-center gap-1">
+            <i data-lucide="shield" class="w-3 h-3"></i>
+            <span>ImageAdmins</span>
+          </button>
+          <button id="role-viewer-btn" onclick="setRole('Viewer')" class="px-2.5 py-1 rounded-lg font-medium transition text-slate-400 hover:text-slate-200 flex items-center gap-1">
+            <i data-lucide="eye" class="w-3 h-3"></i>
+            <span>ReadOnly User</span>
+          </button>
+        </div>
+
+        <!-- Quick Upload Toggle Button -->
+        <button id="toggle-upload-btn" onclick="toggleUploadDropzone()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white text-xs sm:text-sm font-medium transition shadow-md shadow-indigo-600/25">
+          <i data-lucide="cloud-upload" class="w-4 h-4"></i>
+          <span>Upload Image</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full space-y-6">
+
+    <!-- 1. Real Dynamic S3 Metrics Summary Strip -->
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-4" id="stats-section">
+      <!-- Total Objects -->
+      <div class="bg-slate-900 border border-slate-800/90 rounded-2xl p-4 flex flex-col justify-between hover:border-slate-700 transition">
+        <div class="flex items-center justify-between text-slate-400">
+          <span class="text-xs font-medium uppercase tracking-wider">Total Objects</span>
+          <div class="w-7 h-7 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
+            <i data-lucide="layers" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="mt-2">
+          <span class="text-xl sm:text-2xl font-bold text-white font-mono" id="stat-total-images">--</span>
+          <p class="text-[11px] text-slate-400 mt-0.5">S3 Standard Storage</p>
+        </div>
+      </div>
+
+      <!-- Storage Used -->
+      <div class="bg-slate-900 border border-slate-800/90 rounded-2xl p-4 flex flex-col justify-between hover:border-slate-700 transition">
+        <div class="flex items-center justify-between text-slate-400">
+          <span class="text-xs font-medium uppercase tracking-wider">S3 Storage Used</span>
+          <div class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+            <i data-lucide="hard-drive" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="mt-2">
+          <span class="text-xl sm:text-2xl font-bold text-white font-mono" id="stat-storage-used">--</span>
+          <p class="text-[11px] text-slate-400 mt-0.5">5 GB Free Tier Quota</p>
+        </div>
+      </div>
+
+      <!-- Object Versions Tracked -->
+      <div class="bg-slate-900 border border-slate-800/90 rounded-2xl p-4 flex flex-col justify-between hover:border-slate-700 transition">
+        <div class="flex items-center justify-between text-slate-400">
+          <span class="text-xs font-medium uppercase tracking-wider">Object Versions</span>
+          <div class="w-7 h-7 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center">
+            <i data-lucide="history" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="mt-2">
+          <span class="text-xl sm:text-2xl font-bold text-white font-mono" id="stat-total-versions">--</span>
+          <p class="text-[11px] text-emerald-400 mt-0.5 font-medium flex items-center gap-1">
+            <i data-lucide="check-circle" class="w-3 h-3"></i> Bucket Versioning Active
+          </p>
+        </div>
+      </div>
+
+      <!-- Latest S3 Upload -->
+      <div class="bg-slate-900 border border-slate-800/90 rounded-2xl p-4 flex flex-col justify-between hover:border-slate-700 transition">
+        <div class="flex items-center justify-between text-slate-400">
+          <span class="text-xs font-medium uppercase tracking-wider">Latest Upload</span>
+          <div class="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
+            <i data-lucide="clock" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="mt-2 truncate">
+          <p class="text-sm font-semibold text-slate-200 truncate font-mono" id="stat-latest-file">--</p>
+          <p class="text-[11px] text-slate-400 mt-0.5" id="stat-latest-time">--</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Balanced Drag-and-Drop Upload Dropzone (Collapsible - Hidden by Default) -->
+    <section id="upload-container" class="hidden transition-all duration-300">
+      <div class="rounded-2xl bg-slate-900/90 border border-slate-800 p-5 sm:p-7 relative shadow-sm">
+        
+        <!-- Dismiss / Close Button -->
+        <button onclick="toggleUploadDropzone(false)" type="button" title="Close upload area" class="absolute top-3.5 right-3.5 z-30 w-8 h-8 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+
+        <!-- Dropzone Area -->
+        <div class="p-6 rounded-xl border-2 border-dashed border-indigo-500/30 hover:border-indigo-500/60 transition text-center relative overflow-hidden group">
+          <input type="file" id="file-input" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept=".jpg,.jpeg,.png,.webp,.gif">
+          
+          <div class="flex flex-col items-center justify-center gap-2.5 pointer-events-none">
+            <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center group-hover:scale-110 transition duration-300 shadow-inner">
+              <i data-lucide="cloud-upload" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h3 class="text-sm sm:text-base font-semibold text-slate-200">
+                Drag &amp; drop image here, or <span class="text-indigo-400 underline underline-offset-2">browse files</span>
+              </h3>
+              <p class="text-xs text-slate-400 mt-1">Supports JPG, PNG, WEBP, GIF (Max: 15 MB) • AWS S3 Encrypted Storage</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upload Progress & Status -->
+        <div id="upload-status-box" class="hidden mt-4 pt-4 border-t border-slate-800 max-w-md mx-auto">
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-1.5">
+            <span id="upload-filename-text" class="truncate font-mono">Uploading image...</span>
+            <span id="upload-percent-text" class="font-medium text-indigo-400">0%</span>
+          </div>
+          <div class="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
+            <div id="upload-progress-bar" class="bg-indigo-600 h-2 rounded-full transition-all duration-200 w-0"></div>
+          </div>
+        </div>
+
+        <!-- Public APIs Ingestion Strip (https://github.com/public-apis/public-apis) -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 relative z-20">
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+            <span class="flex items-center gap-1.5 font-medium text-slate-300">
+              <i data-lucide="globe" class="w-3.5 h-3.5 text-indigo-400"></i>
+              <span>Or Ingest from Free Public APIs (<a href="https://github.com/public-apis/public-apis" target="_blank" class="text-indigo-400 hover:underline">public-apis catalog</a>):</span>
+            </span>
+            <span class="text-[11px] text-slate-500 hidden sm:inline">Streams directly into private S3</span>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+            <!-- 1. NASA APOD API -->
+            <button onclick="importPublicApi('nasa')" type="button" class="p-2.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-indigo-500/50 text-slate-300 hover:text-white transition flex items-center justify-center gap-2.5 group">
+              <i data-lucide="sparkles" class="w-4 h-4 text-amber-400 group-hover:scale-110 transition"></i>
+              <div class="text-left">
+                <p class="font-medium">NASA Space APOD</p>
+                <p class="text-[10px] text-slate-500">Free Public API Key</p>
+              </div>
+            </button>
+
+            <!-- 2. Lorem Picsum Photo API -->
+            <button onclick="importPublicApi('picsum')" type="button" class="p-2.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-indigo-500/50 text-slate-300 hover:text-white transition flex items-center justify-center gap-2.5 group">
+              <i data-lucide="camera" class="w-4 h-4 text-emerald-400 group-hover:scale-110 transition"></i>
+              <div class="text-left">
+                <p class="font-medium">Picsum Open Photo</p>
+                <p class="text-[10px] text-slate-500">Free Curated Catalog</p>
+              </div>
+            </button>
+
+            <!-- 3. Dog CEO Animals API -->
+            <button onclick="importPublicApi('dog_ceo')" type="button" class="p-2.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-indigo-500/50 text-slate-300 hover:text-white transition flex items-center justify-center gap-2.5 group">
+              <i data-lucide="paw-print" class="w-4 h-4 text-sky-400 group-hover:scale-110 transition"></i>
+              <div class="text-left">
+                <p class="font-medium">Dog CEO Breed API</p>
+                <p class="text-[10px] text-slate-500">Open Public Access</p>
+              </div>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 3. Gallery Toolbar: Live Search & Sort -->
+    <section class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-slate-900/60 p-3 rounded-2xl border border-slate-800">
+      
+      <!-- Search Input -->
+      <div class="relative flex-1 max-w-md">
+        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+        <input type="text" id="search-input" placeholder="Search objects by filename..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2 text-xs sm:text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 transition">
+      </div>
+
+      <!-- Sort Options & Object Count -->
+      <div class="flex items-center justify-between sm:justify-end gap-3">
+        <div class="flex items-center gap-2 text-xs text-slate-400">
+          <i data-lucide="arrow-down-up" class="w-3.5 h-3.5 text-slate-500"></i>
+          <span>Sort:</span>
+          <select id="sort-select" onchange="applySortAndFilter()" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+            <option value="newest" selected>Newest Uploads</option>
+            <option value="oldest">Oldest Uploads</option>
+            <option value="name_asc">Name (A → Z)</option>
+            <option value="name_desc">Name (Z → A)</option>
+            <option value="size_desc">File Size (Largest)</option>
+            <option value="size_asc">File Size (Smallest)</option>
+          </select>
+        </div>
+
+        <div class="text-xs text-slate-400 font-mono pl-3 border-l border-slate-800" id="gallery-count">
+          Loading...
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Gallery Grid -->
+    <section>
+      <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        <!-- Image cards dynamically populated -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="empty-state" class="hidden flex-col items-center justify-center py-20 text-center">
+        <div class="w-16 h-16 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-500 mb-4">
+          <i data-lucide="image" class="w-8 h-8"></i>
+        </div>
+        <h3 class="text-base font-semibold text-slate-300">No images stored</h3>
+        <p class="text-xs text-slate-500 mt-1 max-w-sm">Upload images to populate the secure S3 object gallery.</p>
+        <button onclick="toggleUploadDropzone(true)" class="mt-4 px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-medium hover:bg-indigo-500 transition">
+          Upload First Image
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 5. Lightbox Modal with Full-Size Image & S3 Metadata Inspector Drawer -->
+  <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-6">
+    <div class="relative max-w-5xl w-full bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
+      
+      <!-- Lightbox Header -->
+      <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/90">
+        <div class="flex items-center gap-2 truncate max-w-lg">
+          <div class="w-7 h-7 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center shrink-0">
+            <i data-lucide="file-image" class="w-4 h-4"></i>
+          </div>
+          <h3 id="modal-image-title" class="text-sm font-semibold text-slate-200 truncate font-mono">Image Preview</h3>
+        </div>
+        
+        <div class="flex items-center gap-2">
+          <button onclick="toggleMetadataDrawer()" id="meta-drawer-toggle-btn" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition flex items-center gap-1.5">
+            <i data-lucide="info" class="w-3.5 h-3.5 text-indigo-400"></i>
+            <span>S3 Metadata</span>
+          </button>
+          <button onclick="closeLightbox()" class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Lightbox Body: Image + Optional Metadata Drawer -->
+      <div class="flex-1 overflow-hidden flex flex-col md:flex-row relative">
+        
+        <!-- Main Image Viewer with Navigation -->
+        <div class="flex-1 bg-slate-950 flex items-center justify-center relative p-4 min-h-[350px]">
+          <!-- Prev Button -->
+          <button onclick="navigateLightbox(-1)" class="absolute left-4 z-10 w-10 h-10 rounded-full bg-slate-900/80 hover:bg-slate-800 text-white flex items-center justify-center transition border border-slate-800">
+            <i data-lucide="chevron-left" class="w-5 h-5"></i>
+          </button>
+
+          <img id="modal-image-preview" src="" alt="Preview" class="max-h-[65vh] max-w-full object-contain rounded-lg shadow-lg">
+
+          <!-- Next Button -->
+          <button onclick="navigateLightbox(1)" class="absolute right-4 z-10 w-10 h-10 rounded-full bg-slate-900/80 hover:bg-slate-800 text-white flex items-center justify-center transition border border-slate-800">
+            <i data-lucide="chevron-right" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- S3 Object Metadata Panel (Inspector) -->
+        <div id="metadata-drawer" class="w-full md:w-80 bg-slate-900 border-t md:border-t-0 md:border-l border-slate-800 p-4 overflow-y-auto space-y-4 text-xs">
+          <h4 class="font-bold text-white text-xs uppercase tracking-wider flex items-center gap-1.5">
+            <i data-lucide="server" class="w-3.5 h-3.5 text-indigo-400"></i>
+            <span>S3 Object Details</span>
+          </h4>
+
+          <div class="space-y-3 font-mono">
+            <div>
+              <span class="text-slate-500 block text-[10px] uppercase">Object Key</span>
+              <span id="meta-key" class="text-slate-300 font-semibold break-all text-[11px]">--</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block text-[10px] uppercase">S3 Bucket</span>
+              <span id="meta-bucket" class="text-indigo-400 text-[11px]">sahana-secure-image-gallery</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block text-[10px] uppercase">Version ID</span>
+              <span id="meta-version" class="text-emerald-400 text-[11px] bg-emerald-500/10 px-1.5 py-0.5 rounded">--</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block text-[10px] uppercase">File Size</span>
+              <span id="meta-size" class="text-slate-300 text-[11px]">--</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block text-[10px] uppercase">Content Type</span>
+              <span id="meta-type" class="text-slate-300 text-[11px]">--</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block text-[10px] uppercase">Upload Timestamp</span>
+              <span id="meta-time" class="text-slate-400 text-[11px]">--</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block text-[10px] uppercase">Storage Class</span>
+              <span class="text-slate-300 text-[11px]">STANDARD (S3)</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block text-[10px] uppercase">Encryption</span>
+              <span class="text-slate-300 text-[11px]">SSE-S3 (AES-256)</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block text-[10px] uppercase">Access Control</span>
+              <span class="text-rose-400 text-[11px] font-medium">Private (Block Public Access 4/4)</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Lightbox Footer Actions -->
+      <div class="p-4 border-t border-slate-800 bg-slate-900 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div id="modal-image-meta-strip" class="text-slate-400 font-mono"></div>
+
+        <div class="flex items-center gap-2">
+          <!-- Download Image Button -->
+          <a id="modal-download-btn" href="#" download="" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium transition flex items-center gap-1.5">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>Download</span>
+          </a>
+
+          <!-- Generate URL Action Button -->
+          <button id="modal-share-btn" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium transition flex items-center gap-1.5 shadow-md shadow-indigo-600/20">
+            <i data-lucide="link" class="w-3.5 h-3.5"></i>
+            <span>Generate Pre-Signed URL</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 6. Object Version History & Restore Modal -->
+  <div id="versions-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative max-h-[85vh] flex flex-col">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center">
+            <i data-lucide="history" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <span>S3 Version History</span>
+              <span id="version-modal-filename" class="text-indigo-400 font-mono text-xs font-normal">--</span>
+            </h3>
+            <p class="text-xs text-slate-400">Continuous Bucket Versioning enabled • Restore or view historical variants</p>
+          </div>
+        </div>
+        <button onclick="closeVersionsModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Versions Table Body -->
+      <div class="flex-1 overflow-y-auto py-4">
+        <table class="w-full text-left text-xs">
+          <thead>
+            <tr class="text-slate-400 border-b border-slate-800 pb-2">
+              <th class="font-medium pb-2">Version ID</th>
+              <th class="font-medium pb-2">Timestamp</th>
+              <th class="font-medium pb-2">Size</th>
+              <th class="font-medium pb-2">Status</th>
+              <th class="font-medium pb-2 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody id="versions-table-body" class="divide-y divide-slate-800/60 font-mono">
+            <!-- Versions injected dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
+        <span>S3 Object Versioning safeguards against accidental overwrites &amp; deletions.</span>
+        <button onclick="closeVersionsModal()" class="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium transition">
+          Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 7. Generate Pre-Signed Image URL Modal (Time-Bounded Access) -->
+  <div id="presign-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+      
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
+            <i data-lucide="link-2" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-white">Generate Image URL</h3>
+            <p class="text-xs text-slate-400">SigV4 Pre-signed temporary access grant</p>
+          </div>
+        </div>
+        <button onclick="closePresignModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <div>
+          <label class="block font-medium text-slate-400 mb-1">Target Object Key</label>
+          <input type="text" id="presign-target-key" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-300 font-mono">
+        </div>
+
+        <div>
+          <label class="block font-medium text-slate-400 mb-1">URL Expiration Period</label>
+          <select id="presign-expiry" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500">
+            <option value="300" selected>5 Minutes (Quick Evaluation Demo)</option>
+            <option value="900">15 Minutes</option>
+            <option value="3600">1 Hour (Standard)</option>
+            <option value="21600">6 Hours</option>
+            <option value="86400">24 Hours</option>
+          </select>
+        </div>
+
+        <button id="generate-presign-btn" class="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium transition flex items-center justify-center gap-2 shadow-md shadow-indigo-600/20">
+          <i data-lucide="key" class="w-4 h-4"></i>
+          <span>Generate Secure Pre-Signed URL</span>
+        </button>
+
+        <!-- Result Box with Live Countdown & Status -->
+        <div id="presign-result" class="hidden pt-3 border-t border-slate-800 space-y-3">
+          <!-- Security Verification Badge -->
+          <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] flex items-center justify-between">
+            <div class="flex items-center gap-1.5 font-medium">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+              <span>S3 Block Public Access Active</span>
+            </div>
+            <span id="presign-countdown-badge" class="font-mono bg-emerald-500/20 px-2 py-0.5 rounded text-[11px]">Valid</span>
+          </div>
+
+          <!-- URL Output -->
+          <div class="relative">
+            <input type="text" id="presign-url-output" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-3 pr-20 py-2.5 text-xs text-indigo-300 font-mono truncate">
+            <button id="copy-presign-btn" class="absolute right-1.5 top-1.5 bottom-1.5 px-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-medium transition flex items-center gap-1">
+              <i data-lucide="copy" class="w-3 h-3"></i>
+              <span id="copy-btn-text">Copy</span>
+            </button>
+          </div>
+
+          <!-- Direct Test Link -->
+          <div class="flex items-center justify-end">
+            <a id="presign-test-link" href="#" target="_blank" class="text-xs text-indigo-400 hover:text-indigo-300 underline underline-offset-2 flex items-center gap-1">
+              <span>Open Pre-Signed Link in New Tab</span>
+              <i data-lucide="external-link" class="w-3 h-3"></i>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Footer -->
+  <footer class="mt-auto border-t border-slate-900 bg-slate-950 py-4 text-center text-xs text-slate-500">
+    <p>Secure Image Gallery • Cloud Project by Sahana • AWS EC2 &amp; Amazon S3</p>
+  </footer>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

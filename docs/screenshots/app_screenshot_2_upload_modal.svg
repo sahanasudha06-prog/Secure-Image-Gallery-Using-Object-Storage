@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 680" width="100%" height="100%">
+  <rect width="1100" height="680" fill="#020617" opacity="0.6" />
+  
+  <!-- Upload Modal Dialog -->
+  <g transform="translate(250, 140)">
+    <rect width="600" height="380" rx="16" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+    
+    <text x="30" y="45" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="18" font-weight="700">Upload Image to Object Storage</text>
+    <text x="30" y="68" fill="#64748b" font-family="system-ui, sans-serif" font-size="12">Direct upload to private Amazon S3 bucket</text>
+
+    <!-- Dropzone Area -->
+    <rect x="30" y="95" width="540" height="200" rx="12" fill="#020617" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="6,6" />
+    <circle cx="300" cy="160" r="28" fill="#312e81" />
+    <path d="M 300 148 L 300 172 M 288 160 L 300 148 L 312 160" fill="none" stroke="#818cf8" stroke-width="2.5" />
+
+    <text x="180" y="215" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Drag &amp; drop your image here, or browse</text>
+    <text x="175" y="235" fill="#64748b" font-family="system-ui, sans-serif" font-size="12">Supported formats: PNG, JPG, WEBP, GIF (Max 25MB)</text>
+
+    <!-- Upload Progress Preview -->
+    <rect x="30" y="315" width="540" height="42" rx="8" fill="#1e293b" />
+    <text x="45" y="340" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="12" font-weight="600">selected: hampi_stone_chariot.jpg (48.7 KB)</text>
+    <rect x="440" y="322" width="115" height="28" rx="6" fill="#10b981" />
+    <text x="465" y="341" fill="#ffffff" font-family="system-ui, sans-serif" font-size="11" font-weight="700">✓ Uploaded</text>
+  </g>
+</svg>

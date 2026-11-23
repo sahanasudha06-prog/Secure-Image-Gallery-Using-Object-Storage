@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="100%" height="100%">
+  <defs>
+    <style>
+      .txt { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+      .mono { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; }
+    </style>
+  </defs>
+
+  <!-- AWS Top Navbar -->
+  <rect width="1200" height="48" fill="#161e2e" />
+  <rect x="16" y="12" width="28" height="24" rx="4" fill="#ff9900" />
+  <text x="21" y="29" fill="#161e2e" class="txt" font-weight="900" font-size="14">aws</text>
+  <rect x="70" y="9" width="380" height="30" rx="4" fill="#232f3e" stroke="#4b5563" stroke-width="1" />
+  <text x="95" y="29" fill="#9ca3af" class="txt" font-size="12">IAM (Roles)</text>
+  <text x="920" y="29" fill="#d1d5db" class="txt" font-size="12">Global</text>
+  <circle cx="980" cy="24" r="4" fill="#10b981" />
+  <text x="995" y="29" fill="#f3f4f6" class="txt" font-size="12" font-weight="600">Sahana @ 5489-1029-4412</text>
+
+  <!-- AWS Subnav / Breadcrumb -->
+  <rect y="48" width="1200" height="42" fill="#ffffff" stroke="#e5e7eb" stroke-width="1" />
+  <text x="24" y="74" fill="#2563eb" class="txt" font-size="13">IAM</text>
+  <text x="56" y="74" fill="#6b7280" class="txt" font-size="13">&gt;</text>
+  <text x="72" y="74" fill="#2563eb" class="txt" font-size="13">Roles</text>
+  <text x="114" y="74" fill="#6b7280" class="txt" font-size="13">&gt;</text>
+  <text x="130" y="74" fill="#111827" class="txt" font-size="13" font-weight="600">EC2-S3-ImageGallery-Role</text>
+
+  <!-- Body Background -->
+  <rect y="90" width="1200" height="610" fill="#f9fafb" />
+
+  <!-- Left Sidebar -->
+  <rect y="90" width="220" height="610" fill="#ffffff" stroke="#e5e7eb" stroke-width="1" />
+  <text x="20" y="125" fill="#111827" class="txt" font-size="13" font-weight="700">Access management</text>
+  <text x="24" y="155" fill="#4b5563" class="txt" font-size="13">User groups (1)</text>
+  <text x="24" y="185" fill="#4b5563" class="txt" font-size="13">Users (1)</text>
+  <rect x="10" y="200" width="200" height="32" rx="4" fill="#eff6ff" />
+  <text x="24" y="221" fill="#2563eb" class="txt" font-size="13" font-weight="600">Roles (1)</text>
+  <text x="24" y="255" fill="#4b5563" class="txt" font-size="13">Policies</text>
+
+  <!-- Main Content Area -->
+  <g transform="translate(245, 110)">
+    <!-- Header Card -->
+    <rect width="930" height="100" rx="6" fill="#ffffff" stroke="#e5e7eb" stroke-width="1" />
+    <text x="20" y="32" fill="#111827" class="txt" font-size="18" font-weight="700">EC2-S3-ImageGallery-Role</text>
+    <text x="20" y="58" fill="#4b5563" class="mono" font-size="12">ARN: arn:aws:iam::548910294412:role/EC2-S3-ImageGallery-Role</text>
+    <text x="20" y="82" fill="#059669" class="txt" font-size="12" font-weight="600">Trusted entities: AWS service: ec2.amazonaws.com</text>
+
+    <!-- Tab Bar -->
+    <rect y="120" width="930" height="36" fill="#ffffff" stroke="#e5e7eb" stroke-width="1" />
+    <rect x="0" y="120" width="130" height="36" fill="#ffffff" />
+    <line x1="0" y1="155" x2="130" y2="155" stroke="#2563eb" stroke-width="3" />
+    <text x="20" y="143" fill="#2563eb" class="txt" font-size="13" font-weight="600">Permissions (1)</text>
+    <text x="155" y="143" fill="#4b5563" class="txt" font-size="13">Trust relationships</text>
+    <text x="300" y="143" fill="#4b5563" class="txt" font-size="13">Tags</text>
+
+    <!-- Permissions Policy Details Box -->
+    <rect y="175" width="930" height="390" rx="6" fill="#ffffff" stroke="#e5e7eb" stroke-width="1" />
+    <rect y="175" width="930" height="36" fill="#f3f4f6" />
+    <text x="20" y="198" fill="#374151" class="txt" font-size="12" font-weight="600">Permissions policies (1)</text>
+
+    <text x="20" y="235" fill="#2563eb" class="mono" font-size="13" font-weight="600">EC2-S3-ImageGallery-Policy</text>
+    <text x="250" y="235" fill="#4b5563" class="txt" font-size="12">Customer managed</text>
+    <text x="450" y="235" fill="#059669" class="txt" font-size="12" font-weight="600">Least Privilege Enforced</text>
+
+    <!-- JSON Policy Inspector -->
+    <rect x="20" y="255" width="890" height="290" rx="4" fill="#0f172a" />
+    <text x="40" y="280" fill="#94a3b8" class="mono" font-size="12">{</text>
+    <text x="60" y="300" fill="#94a3b8" class="mono" font-size="12">"Version": <tspan fill="#38bdf8">"2012-10-17"</tspan>,</text>
+    <text x="60" y="320" fill="#94a3b8" class="mono" font-size="12">"Statement": [</text>
+    <text x="80" y="340" fill="#94a3b8" class="mono" font-size="12">{</text>
+    <text x="100" y="360" fill="#94a3b8" class="mono" font-size="12">"Sid": <tspan fill="#38bdf8">"AllowEC2ObjectOperations"</tspan>,</text>
+    <text x="100" y="380" fill="#94a3b8" class="mono" font-size="12">"Effect": <tspan fill="#4ade80">"Allow"</tspan>,</text>
+    <text x="100" y="400" fill="#94a3b8" class="mono" font-size="12">"Action": [</text>
+    <text x="120" y="420" fill="#38bdf8" class="mono" font-size="12">"s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:ListBucket"</text>
+    <text x="100" y="440" fill="#94a3b8" class="mono" font-size="12">],</text>
+    <text x="100" y="460" fill="#94a3b8" class="mono" font-size="12">"Resource": [</text>
+    <text x="120" y="480" fill="#fcd34d" class="mono" font-size="12">"arn:aws:s3:::sahana-secure-image-gallery",</text>
+    <text x="120" y="500" fill="#fcd34d" class="mono" font-size="12">"arn:aws:s3:::sahana-secure-image-gallery/*"</text>
+    <text x="100" y="520" fill="#94a3b8" class="mono" font-size="12">]</text>
+    <text x="80" y="535" fill="#94a3b8" class="mono" font-size="12">}</text>
+    <text x="60" y="540" fill="#94a3b8" class="mono" font-size="12">]</text>
+    <text x="40" y="542" fill="#94a3b8" class="mono" font-size="12">}</text>
+  </g>
+</svg>

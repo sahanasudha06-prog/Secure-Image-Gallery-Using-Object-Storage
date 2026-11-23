@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="100%" height="100%">
+  <defs>
+    <style>
+      .txt { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+      .mono { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; }
+    </style>
+  </defs>
+
+  <!-- AWS Top Navbar -->
+  <rect width="1200" height="48" fill="#161e2e" />
+  <rect x="16" y="12" width="28" height="24" rx="4" fill="#ff9900" />
+  <text x="21" y="29" fill="#161e2e" class="txt" font-weight="900" font-size="14">aws</text>
+  
+  <!-- Search Bar -->
+  <rect x="70" y="9" width="380" height="30" rx="4" fill="#232f3e" stroke="#4b5563" stroke-width="1" />
+  <text x="95" y="29" fill="#9ca3af" class="txt" font-size="12">IAM (Identity and Access Management)</text>
+  
+  <!-- Right Navbar Profile -->
+  <text x="920" y="29" fill="#d1d5db" class="txt" font-size="12">Global</text>
+  <circle cx="980" cy="24" r="4" fill="#10b981" />
+  <text x="995" y="29" fill="#f3f4f6" class="txt" font-size="12" font-weight="600">Sahana @ 5489-1029-4412</text>
+
+  <!-- AWS Subnav / Breadcrumb -->
+  <rect y="48" width="1200" height="42" fill="#ffffff" stroke="#e5e7eb" stroke-width="1" />
+  <text x="24" y="74" fill="#2563eb" class="txt" font-size="13">IAM</text>
+  <text x="56" y="74" fill="#6b7280" class="txt" font-size="13">&gt;</text>
+  <text x="72" y="74" fill="#2563eb" class="txt" font-size="13">User groups</text>
+  <text x="156" y="74" fill="#6b7280" class="txt" font-size="13">&gt;</text>
+  <text x="172" y="74" fill="#111827" class="txt" font-size="13" font-weight="600">ImageAdmins</text>
+
+  <!-- Body Background -->
+  <rect y="90" width="1200" height="610" fill="#f9fafb" />
+
+  <!-- Left Sidebar -->
+  <rect y="90" width="220" height="610" fill="#ffffff" stroke="#e5e7eb" stroke-width="1" />
+  <text x="20" y="125" fill="#111827" class="txt" font-size="13" font-weight="700">Access management</text>
+  <rect x="10" y="140" width="200" height="32" rx="4" fill="#eff6ff" />
+  <text x="24" y="161" fill="#2563eb" class="txt" font-size="13" font-weight="600">User groups (1)</text>
+  <text x="24" y="195" fill="#4b5563" class="txt" font-size="13">Users (1)</text>
+  <text x="24" y="225" fill="#4b5563" class="txt" font-size="13">Roles (1)</text>
+  <text x="24" y="255" fill="#4b5563" class="txt" font-size="13">Policies</text>
+
+  <!-- Main Content Area -->
+  <g transform="translate(245, 110)">
+    <!-- Header Card -->
+    <rect width="930" height="85" rx="6" fill="#ffffff" stroke="#e5e7eb" stroke-width="1" />
+    <text x="20" y="32" fill="#111827" class="txt" font-size="18" font-weight="700">ImageAdmins</text>
+    <text x="20" y="58" fill="#4b5563" class="mono" font-size="12">ARN: arn:aws:iam::548910294412:group/ImageAdmins</text>
+    <text x="650" y="58" fill="#6b7280" class="txt" font-size="12">Created: 2026-11-20 09:30 UTC</text>
+
+    <!-- Tab Bar -->
+    <rect y="105" width="930" height="36" fill="#ffffff" stroke="#e5e7eb" stroke-width="1" />
+    <rect x="0" y="105" width="110" height="36" fill="#ffffff" />
+    <line x1="0" y1="140" x2="110" y2="140" stroke="#2563eb" stroke-width="3" />
+    <text x="24" y="128" fill="#2563eb" class="txt" font-size="13" font-weight="600">Users (1)</text>
+    <text x="135" y="128" fill="#4b5563" class="txt" font-size="13">Permissions (1)</text>
+    <text x="250" y="128" fill="#4b5563" class="txt" font-size="13">Access Advisor</text>
+
+    <!-- Users Table Container -->
+    <rect y="155" width="930" height="150" rx="6" fill="#ffffff" stroke="#e5e7eb" stroke-width="1" />
+    <rect y="155" width="930" height="36" fill="#f3f4f6" />
+    <text x="24" y="178" fill="#374151" class="txt" font-size="12" font-weight="600">User name</text>
+    <text x="260" y="178" fill="#374151" class="txt" font-size="12" font-weight="600">Path</text>
+    <text x="440" y="178" fill="#374151" class="txt" font-size="12" font-weight="600">Added to group</text>
+    <text x="680" y="178" fill="#374151" class="txt" font-size="12" font-weight="600">Console access</text>
+
+    <!-- Row 1: sahana_admin -->
+    <text x="24" y="215" fill="#2563eb" class="mono" font-size="13" font-weight="600">sahana_admin</text>
+    <text x="260" y="215" fill="#4b5563" class="mono" font-size="12">/</text>
+    <text x="440" y="215" fill="#4b5563" class="txt" font-size="12">2026-11-20 09:35 UTC</text>
+    <circle cx="688" cy="211" r="4" fill="#10b981" />
+    <text x="700" y="215" fill="#10b981" class="txt" font-size="12" font-weight="600">Enabled</text>
+
+    <!-- Attached Policy Summary Box -->
+    <rect y="325" width="930" height="235" rx="6" fill="#ffffff" stroke="#e5e7eb" stroke-width="1" />
+    <rect y="325" width="930" height="36" fill="#f3f4f6" />
+    <text x="24" y="348" fill="#374151" class="txt" font-size="12" font-weight="600">Attached Permissions Policies</text>
+
+    <text x="24" y="385" fill="#2563eb" class="mono" font-size="13" font-weight="600">ImageAdmins-S3-Policy</text>
+    <text x="240" y="385" fill="#4b5563" class="txt" font-size="12">Customer managed</text>
+    <text x="440" y="385" fill="#10b981" class="txt" font-size="12" font-weight="600">Attached directly</text>
+
+    <!-- Embedded Policy Code Snippet -->
+    <rect x="24" y="405" width="880" height="135" rx="4" fill="#1e293b" />
+    <text x="40" y="428" fill="#f8fafc" class="mono" font-size="11">"Action": [</text>
+    <text x="60" y="446" fill="#38bdf8" class="mono" font-size="11">"s3:ListAllMyBuckets", "s3:GetBucketVersioning", "s3:PutBucketVersioning",</text>
+    <text x="60" y="464" fill="#38bdf8" class="mono" font-size="11">"s3:GetBucketPublicAccessBlock", "s3:PutBucketPublicAccessBlock",</text>
+    <text x="60" y="482" fill="#38bdf8" class="mono" font-size="11">"s3:ListBucket", "s3:GetObject", "s3:PutObject", "s3:DeleteObject"</text>
+    <text x="40" y="502" fill="#f8fafc" class="mono" font-size="11">], "Resource": "arn:aws:s3:::sahana-secure-image-gallery/*"</text>
+    <text x="40" y="524" fill="#4ade80" class="mono" font-size="11">// Status: Principle of Least Privilege Enforced</text>
+  </g>
+</svg>

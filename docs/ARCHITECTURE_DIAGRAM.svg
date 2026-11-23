@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 680" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f19" />
+      <stop offset="100%" stop-color="#111827" />
+    </linearGradient>
+    <linearGradient id="card-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="indigo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#4f46e5" />
+    </linearGradient>
+    <linearGradient id="emerald-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <linearGradient id="amber-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <rect width="1100" height="680" fill="url(#bg-grad)" rx="16" />
+
+  <!-- Title & Metadata -->
+  <text x="50" y="55" fill="#f8fafc" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="700">Cloud Architecture: Secure Image Gallery</text>
+  <text x="50" y="85" fill="#94a3b8" font-family="system-ui, -apple-system, sans-serif" font-size="14">Student Project: Sahana • AWS EC2, S3, IAM Security &amp; Public APIs Ingestion</text>
+
+  <!-- Status / Pill Tags -->
+  <g transform="translate(730, 40)">
+    <rect width="320" height="34" rx="17" fill="#1e293b" stroke="#334155" stroke-width="1" />
+    <circle cx="18" cy="17" r="5" fill="#10b981" />
+    <text x="32" y="22" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12" font-weight="500">Least Privilege &amp; Versioning Active</text>
+  </g>
+
+  <!-- 1. Client Browser Box -->
+  <g transform="translate(60, 150)" filter="url(#shadow)">
+    <rect width="240" height="320" rx="14" fill="url(#card-grad)" stroke="#334155" stroke-width="1.5" />
+    <rect width="240" height="42" rx="14" fill="#1e293b" />
+    <text x="20" y="27" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="15" font-weight="600">Client / Browser</text>
+    <circle cx="215" cy="21" r="5" fill="#10b981" />
+    
+    <text x="20" y="75" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="13" font-weight="500">End-User Interface</text>
+    <rect x="20" y="90" width="200" height="40" rx="8" fill="#0f172a" stroke="#334155" />
+    <text x="30" y="115" fill="#cbd5e1" font-family="monospace" font-size="12">Upload / View / Delete</text>
+
+    <text x="20" y="165" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="13" font-weight="500">Public APIs Ingestion</text>
+    <rect x="20" y="180" width="200" height="60" rx="8" fill="#0f172a" stroke="#334155" />
+    <text x="30" y="202" fill="#38bdf8" font-family="system-ui, sans-serif" font-size="12">NASA &amp; Picsum APIs</text>
+    <text x="30" y="224" fill="#64748b" font-family="system-ui, sans-serif" font-size="11">Automated S3 Archival</text>
+
+    <text x="20" y="275" fill="#64748b" font-family="system-ui, sans-serif" font-size="11">Pre-Signed QR Code Sharing</text>
+    <text x="20" y="295" fill="#10b981" font-family="system-ui, sans-serif" font-size="11" font-weight="500">✓ No public bucket access</text>
+  </g>
+
+  <!-- 2. AWS Cloud Enclosure -->
+  <g transform="translate(360, 120)">
+    <rect width="680" height="480" rx="16" fill="none" stroke="#4f46e5" stroke-dasharray="6,6" stroke-width="1.5" opacity="0.6" />
+    <rect x="20" y="-14" width="140" height="28" rx="6" fill="#4f46e5" />
+    <text x="32" y="5" fill="#ffffff" font-family="system-ui, sans-serif" font-size="12" font-weight="700">AWS CLOUD (VPC)</text>
+
+    <!-- EC2 Box -->
+    <g transform="translate(40, 50)" filter="url(#shadow)">
+      <rect width="260" height="260" rx="14" fill="url(#card-grad)" stroke="#475569" stroke-width="1.5" />
+      <rect width="260" height="42" rx="14" fill="url(#indigo-grad)" />
+      <text x="18" y="26" fill="#ffffff" font-family="system-ui, sans-serif" font-size="14" font-weight="700">AWS EC2 Virtual Machine</text>
+
+      <text x="18" y="70" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12">Instance: <tspan fill="#f8fafc" font-weight="600">t2.micro / Linux</tspan></text>
+      <text x="18" y="92" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12">App Stack: <tspan fill="#f8fafc" font-weight="600">Python Flask + Boto3</tspan></text>
+      <text x="18" y="114" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12">Web Server: <tspan fill="#f8fafc" font-weight="600">Nginx / Gunicorn</tspan></text>
+
+      <!-- Attached IAM Role Box -->
+      <rect x="18" y="135" width="224" height="100" rx="8" fill="#0f172a" stroke="#6366f1" stroke-width="1" />
+      <text x="28" y="157" fill="#818cf8" font-family="system-ui, sans-serif" font-size="12" font-weight="700">Attached IAM Role</text>
+      <text x="28" y="177" fill="#cbd5e1" font-family="monospace" font-size="11">EC2-S3-ImageGallery-Role</text>
+      <text x="28" y="197" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10">• Auto STS Temporary Token</text>
+      <text x="28" y="215" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10">• Zero hardcoded secret keys!</text>
+    </g>
+
+    <!-- S3 Storage Box -->
+    <g transform="translate(380, 50)" filter="url(#shadow)">
+      <rect width="260" height="380" rx="14" fill="url(#card-grad)" stroke="#475569" stroke-width="1.5" />
+      <rect width="260" height="42" rx="14" fill="url(#emerald-grad)" />
+      <text x="18" y="26" fill="#ffffff" font-family="system-ui, sans-serif" font-size="14" font-weight="700">Amazon S3 Object Storage</text>
+
+      <text x="18" y="70" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12">Bucket Name:</text>
+      <text x="18" y="90" fill="#34d399" font-family="monospace" font-size="11" font-weight="600">sahana-secure-image-gallery</text>
+
+      <rect x="18" y="110" width="224" height="60" rx="8" fill="#0f172a" stroke="#10b981" stroke-width="1" />
+      <text x="28" y="130" fill="#34d399" font-family="system-ui, sans-serif" font-size="11" font-weight="700">S3 Bucket Versioning</text>
+      <text x="28" y="148" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10">Status: <tspan fill="#34d399">Enabled</tspan></text>
+      <text x="28" y="162" fill="#64748b" font-family="system-ui, sans-serif" font-size="10">Rollback &amp; overwrite protection</text>
+
+      <rect x="18" y="180" width="224" height="60" rx="8" fill="#0f172a" stroke="#e11d48" stroke-width="1" />
+      <text x="28" y="200" fill="#fb7185" font-family="system-ui, sans-serif" font-size="11" font-weight="700">Block Public Access (BPA)</text>
+      <text x="28" y="218" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10">Status: <tspan fill="#fb7185">Strictly Blocked</tspan></text>
+      <text x="28" y="232" fill="#64748b" font-family="system-ui, sans-serif" font-size="10">No public ACLs or bucket policies</text>
+
+      <rect x="18" y="250" width="224" height="50" rx="8" fill="#0f172a" stroke="#334155" />
+      <text x="28" y="270" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11" font-weight="600">Default Encryption</text>
+      <text x="28" y="288" fill="#64748b" font-family="system-ui, sans-serif" font-size="10">SSE-S3 (AES-256)</text>
+
+      <rect x="18" y="310" width="224" height="50" rx="8" fill="#0f172a" stroke="#334155" />
+      <text x="28" y="330" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11" font-weight="600">Storage Class</text>
+      <text x="28" y="348" fill="#64748b" font-family="system-ui, sans-serif" font-size="10">S3 Standard (High Availability)</text>
+    </g>
+
+    <!-- IAM Group & User Box -->
+    <g transform="translate(40, 335)" filter="url(#shadow)">
+      <rect width="310" height="120" rx="10" fill="url(#card-grad)" stroke="#334155" />
+      <rect width="310" height="32" rx="10" fill="url(#amber-grad)" />
+      <text x="14" y="21" fill="#ffffff" font-family="system-ui, sans-serif" font-size="12" font-weight="700">IAM Administration &amp; Governance</text>
+      <text x="14" y="55" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11">• Project Owner: <tspan fill="#fbbf24" font-weight="600">Sahana</tspan></text>
+      <text x="14" y="75" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11">• IAM Admin User: <tspan fill="#fbbf24" font-weight="600">sahana_admin</tspan></text>
+      <text x="14" y="95" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10">• Principle: Least Privilege Policy enforcement</text>
+    </g>
+  </g>
+
+  <!-- Flow Arrows & Labels -->
+  <path d="M 300 240 L 400 240" fill="none" stroke="#6366f1" stroke-width="2.5" />
+  <text x="312" y="230" fill="#818cf8" font-family="system-ui, sans-serif" font-size="11" font-weight="600">HTTPS API</text>
+
+  <path d="M 660 220 L 740 220" fill="none" stroke="#10b981" stroke-width="2.5" />
+  <text x="670" y="210" fill="#34d399" font-family="system-ui, sans-serif" font-size="10" font-weight="600">boto3 (IAM Role)</text>
+
+  <path d="M 270 470 C 450 630, 680 630, 820 480" fill="none" stroke="#38bdf8" stroke-dasharray="5,5" stroke-width="2" />
+  <text x="510" y="605" fill="#38bdf8" font-family="system-ui, sans-serif" font-size="12" font-weight="600">Direct Download via Time-Bounded Pre-Signed URL</text>
+
+  <text x="50" y="650" fill="#64748b" font-family="system-ui, sans-serif" font-size="12">Designed for AWS Cloud Computing • Project by Sahana</text>
+</svg>
