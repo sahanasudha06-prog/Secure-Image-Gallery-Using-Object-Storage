@@ -7,7 +7,10 @@ from storage_service import StorageService
 from public_api_service import PublicApiService
 
 # Import creative generator
-import seed_rich_gallery
+try:
+    import seed_rich_gallery
+except ImportError:
+    seed_rich_gallery = None
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -67,6 +70,9 @@ def generate_asset():
     data = request.get_json() or {}
     style = data.get("style", "sunset")
     custom_name = data.get("name", "").strip()
+
+    if seed_rich_gallery is None:
+        return jsonify({"success": False, "error": "Sample image generator module not loaded"}), 500
 
     generator_map = {
         "sunset": (seed_rich_gallery.generate_golden_sunset, "golden_sunset", "Nature"),
