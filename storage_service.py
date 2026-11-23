@@ -30,16 +30,25 @@ class StorageService:
             import boto3
             from botocore.config import Config as BotoConfig
             
-            session_kwargs = {"region_name": Config.AWS_REGION}
+            region = Config.AWS_REGION or "ap-southeast-2"
+            session_kwargs = {"region_name": region}
             if Config.AWS_ACCESS_KEY_ID and Config.AWS_SECRET_ACCESS_KEY:
                 session_kwargs["aws_access_key_id"] = Config.AWS_ACCESS_KEY_ID
                 session_kwargs["aws_secret_access_key"] = Config.AWS_SECRET_ACCESS_KEY
                 if Config.AWS_SESSION_TOKEN:
                     session_kwargs["aws_session_token"] = Config.AWS_SESSION_TOKEN
             
+            boto_config = BotoConfig(
+                region_name=region,
+                signature_version="s3v4",
+                s3={"addressing_style": "virtual"}
+            )
+            
             self.s3_client = boto3.client(
                 "s3",
-                config=BotoConfig(signature_version="s3v4"),
+                region_name=region,
+                endpoint_url=f"https://s3.{region}.amazonaws.com",
+                config=boto_config,
                 **session_kwargs
             )
             self.bucket_name = Config.AWS_S3_BUCKET
